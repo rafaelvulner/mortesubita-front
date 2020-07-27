@@ -20,6 +20,8 @@ import {ProgressBarModule} from 'primeng/progressbar';
 import {InputTextModule} from 'primeng/inputtext';
 import {ConfirmDialogModule} from 'primeng/confirmdialog';
 import { MessagesModule } from 'primeng/messages';
+import {ListboxModule} from 'primeng/listbox';
+
 
 @NgModule({
   declarations: [ClubeComponent],
@@ -41,7 +43,8 @@ import { MessagesModule } from 'primeng/messages';
     HttpClientModule,
     FormsModule,
     ConfirmDialogModule,
-    MessagesModule
+    MessagesModule,
+    ListboxModule
   ]
 })
 export class ClubeModule { }

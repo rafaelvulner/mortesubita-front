@@ -8,4 +8,6 @@ export interface Clube {
 
     serie?;
 
+    campeonato?;
+
 }

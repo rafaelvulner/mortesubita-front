@@ -17,6 +17,8 @@ import {DropdownModule} from 'primeng/dropdown';
 import {ProgressBarModule} from 'primeng/progressbar';
 import {InputTextModule} from 'primeng/inputtext';
 import { LigasComponent } from './ligas.component';
+import {ListboxModule} from 'primeng/listbox';
+import { CheckboxModule } from 'primeng/checkbox';
 
 @NgModule({
   declarations: [LigasComponent],
@@ -36,6 +38,8 @@ import { LigasComponent } from './ligas.component';
     ProgressBarModule,
     HttpClientModule,
     FormsModule,
+    ListboxModule,
+    CheckboxModule
   ]
 })
 export class LigasModule { }

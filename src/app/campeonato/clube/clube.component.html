@@ -1,6 +1,7 @@
-<p-table [columns]="cols" [value]="clubs" selectionMode="single" [(selection)]="selectedClub" (onRowSelect)="onRowSelect($event)" [paginator]="true" [rows]="15">
+<div class="p-col">
+<p-table [columns]="cols" [value]="clubs" selectionMode="single" [(selection)]="selectedClub" (onRowSelect)="onRowSelect($event)" [paginator]="true" [rows]="10">
   <ng-template pTemplate="caption">
-      Ligas
+      Clubes
   </ng-template>
   <ng-template pTemplate="header" let-columns>
       <tr>
@@ -24,6 +25,8 @@
   </ng-template>    
 </p-table>
 
+</div>
+
 <p-confirmDialog header="Confirmation" icon="pi pi-exclamation-triangle"></p-confirmDialog>
 <p-toast></p-toast>
 
@@ -46,6 +49,14 @@
       </div>
       <div class="p-col-8">
           <input pInputText id="serie" [(ngModel)]="club.serie" />
+      </div>
+
+      <div class="p-grid p-justify-center">
+        <div class="p-col-12">
+            <p-listbox [options]="camps" [(ngModel)]="camp" optionLabel="nome"></p-listbox>
+
+            <p>Campeonato selecionado: {{camp ? camp.nome : 'none'}}</p>
+        </div>
       </div>
   </div>
   <p-footer>

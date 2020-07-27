@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ClubeService } from './clube.service';
 import { Clube } from '../domain/clube';
 import {ConfirmationService, MessageService} from 'primeng/api';
+import { LigasService } from '../ligas/ligas.service';
+import { Campeonato } from '../domain/icampeonato';
 
 @Component({
   selector: 'app-clube',
@@ -23,16 +25,22 @@ export class ClubeComponent implements OnInit {
   
     cols: any[];
 
+    camps: Campeonato[];
+
+    camp: Campeonato;
+
   
     constructor(
         private clubeService: ClubeService,
         private confirmationService: ConfirmationService,
-        private messageService: MessageService
+        private messageService: MessageService,
+        private ligaService: LigasService
         ) { }
   
     ngOnInit() {
   
       this.listarClubes();
+      this.listarCampeonatos();
         
         this.cols = [
             { field: 'nome', header: 'Nome' },
@@ -46,6 +54,10 @@ export class ClubeComponent implements OnInit {
           this.club = {};
           this.displayDialog = true;
       }
+
+      listarCampeonatos() {
+          this.ligaService.buscarLigas().then(camps => this.camps = camps);
+      }
       
       listarClubes() {
           
@@ -53,15 +65,19 @@ export class ClubeComponent implements OnInit {
     }
   
     save() {
+        
+        if(this.camp !== undefined){
+            this.club.campeonato = this.camp.id;
+        }
         this.clubeService.salvar(this.club).then(resp => {
-          const cars = [...this.clubs];
+          const clube = [...this.clubs];
         if (this.newClub) {
-            cars.push(this.club);
+            clube.push(this.club);
         } else {
-            cars[this.clubs.indexOf(this.selectedClub)] = this.club;
+            clube[this.clubs.indexOf(this.selectedClub)] = this.club;
         }
   
-        this.clubs = cars;
+        this.clubs = clube;
         this.club = null;
         this.displayDialog = false;
         this.listarClubes();

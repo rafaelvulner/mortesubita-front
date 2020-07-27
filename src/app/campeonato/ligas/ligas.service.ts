@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Campeonato } from '../domain/icampeonato';
 import { Observable } from 'rxjs';
+import { Clube } from '../domain/clube';
 
 const API = 'http://localhost:8080/campeonato/';
 
@@ -29,5 +30,12 @@ export class LigasService {
   public delete(id: number) {
     return this.http.delete(API + id)
     .toPromise();
+  }
+
+  public excluirClubes(id: number, clubes: Clube[]){
+    return this.http.put<Campeonato>(API + id, clubes)
+    .toPromise()
+    .then(res => <Campeonato> res)
+    .then(data => data);
   }
 }

@@ -1,14 +1,40 @@
-import { OnInit, Component } from '@angular/core';
+import { OnInit, Component, OnChanges, SimpleChanges } from '@angular/core';
 import { Campeonato } from '../domain/icampeonato';
 import { LigasService } from './ligas.service';
+import { Clube } from '../domain/clube';
+import { ClubeService } from '../clube/clube.service';
 import {SelectItem} from 'primeng/api';
-import {SelectItemGroup} from 'primeng/api';
+import { forEach } from '@angular/router/src/utils/collection';
 
 
 @Component({
     selector: 'app-ligas',
     templateUrl: './ligas.component.html',
-    styleUrls: ['./ligas.component.css']
+    styleUrls: ['./ligas.component.css'],
+    styles: [`
+        :host ::ng-deep .ui-multiselect {
+            min-width: 15em;
+        }
+
+        :host ::ng-deep .ui-multiselected-item-token,
+        :host ::ng-deep .ui-multiselected-empty-token {
+            padding: 2px 4px;
+            margin: 0 0.286em 0 0;
+            display: inline-block;
+            vertical-align:middle;
+            height: 1.857em;
+        }
+
+        :host ::ng-deep .ui-multiselected-item-token {
+            background: #007ad9;
+            color: #ffffff;
+        }
+
+        :host ::ng-deep .ui-multiselected-empty-token {
+            background: #d95f00;
+            color: #ffffff;
+        }
+    `]
   })
 export class LigasComponent implements OnInit {
 
@@ -21,40 +47,26 @@ export class LigasComponent implements OnInit {
     newCamp: boolean;
   
     camps: Campeonato[];
+
+    clubsCamp: Clube[];
   
     cols: any[];
-
-    /**Teste */
-    cars: SelectItem[];
-    groupedCars: SelectItemGroup[];
-    selectedCar2 = 'BMW';
-    items: SelectItem[];
-
-    item: string;
   
+    /**teste */
+    
+    displayBasic: boolean;
+    selectedClubs: Clube[];
+    clubs: Clube[];
+
+
     constructor(
-        private ligaService: LigasService) { }
+        private ligaService: LigasService,
+        private clubeService: ClubeService
+        ) { }
   
     ngOnInit() {
-
-        this.items = [];
-        for (let i = 0; i < 10000; i++) {
-            this.items.push({label: 'Item ' + i, value: 'Item ' + i});
-        }
-
-        this.cars = [
-            {label: 'Audi', value: 'Audi'},
-            {label: 'BMW', value: 'BMW'},
-            {label: 'Fiat', value: 'Fiat'},
-            {label: 'Ford', value: 'Ford'},
-            {label: 'Honda', value: 'Honda'},
-            {label: 'Jaguar', value: 'Jaguar'},
-            {label: 'Mercedes', value: 'Mercedes'},
-            {label: 'Renault', value: 'Renault'},
-            {label: 'VW', value: 'VW'},
-            {label: 'Volvo', value: 'Volvo'}
-        ];
-  
+        
+       
       this.listarCampeonatos();
         
         this.cols = [
@@ -72,19 +84,21 @@ export class LigasComponent implements OnInit {
       
       listarCampeonatos(){
           
-          this.ligaService.buscarLigas().then(camps => this.camps = camps);
+          this.ligaService.buscarLigas().then(camps => {
+            this.camps = camps;
+          });
     }
   
     save() {
         this.ligaService.salvar(this.camp).then(resp => {
-          const cars = [...this.camps];
+          const camps = [...this.camps];
         if (this.newCamp) {
-            cars.push(this.camp);
+            camps.push(this.camp);
         } else {
-            cars[this.camps.indexOf(this.selectedCamp)] = this.camp;
+            camps[this.camps.indexOf(this.selectedCamp)] = this.camp;
         }
   
-        this.camps = cars;
+        this.camps = camps;
         this.camp = null;
         this.displayDialog = false;
         this.listarCampeonatos();
@@ -109,7 +123,7 @@ export class LigasComponent implements OnInit {
         this.newCamp = false;
         this.camp = this.cloneCamp(event.data);
         this.displayDialog = true;
-    }
+}
   
     cloneCamp(c: Campeonato): Campeonato {
         const camp = {};
@@ -118,6 +132,30 @@ export class LigasComponent implements OnInit {
             camp[prop] = c[prop];
         }
         return camp;
+    }
+
+    /**teste */
+    showBasicDialog() {
+        this.displayBasic = true;
+    }
+
+    excluirTimesDoCampeonato() {
+        
+        this.ligaService.excluirClubes(this.camp.id, this.selectedClubs);
+        this.carregarClubes(this.camp.id);
+        const index = this.camp.clubes.indexOf(this.selectedClubs);
+        this.camp.clubes = this.camp.clubes.filter(old => old === this.selectedClubs);
+      }
+    
+      mostrar(){
+        this.carregarClubes(this.camp.id);
+      }
+    
+      carregarClubes(id: number) {
+        this.clubeService.buscarClubesDeUmCampeonato(id).then(club => {
+          this.clubs = club;
+        });
+
     }
 
 }

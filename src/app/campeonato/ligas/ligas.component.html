@@ -1,3 +1,4 @@
+<div class="p-col">
 <p-table [columns]="cols" [value]="camps" selectionMode="single" [(selection)]="selectedCamp" (onRowSelect)="onRowSelect($event)" [paginator]="true" [rows]="15">
     <ng-template pTemplate="caption">
         Ligas
@@ -23,8 +24,9 @@
         </div>
     </ng-template>    
 </p-table>
+</div>
 
-<p-dialog header="Car Details" [(visible)]="displayDialog" [focusOnShow]="false" [responsive]="true" showEffect="fade" [modal]="true"  [style]="{width: '300px'}">
+<p-dialog header="Campeonato" [(visible)]="displayDialog" [responsive]="true" [focusOnShow]="false" showEffect="fade" [modal]="true"  [style]="{width: '300px'}">
     <div class="p-grid ui-fluid" *ngIf="camp">
         <div class="p-col-4">
             <label for="nome">Nome</label>
@@ -45,22 +47,24 @@
             <input pInputText id="nacionalidade" [(ngModel)]="camp.nacionalidade" />
         </div>
     </div>
-    <div>
-        <p-dropdown [options]="cars" [(ngModel)]="selectedCar2" filter="true">
-            <ng-template let-item pTemplate="selectedItem">
-                <span style="vertical-align:middle; margin-left: .5em">{{item.label}}</span>
-            </ng-template>
-            <ng-template let-car pTemplate="item">
-                <div class="ui-helper-clearfix" style="position: relative;height: 25px;">
-                    <div style="font-size:14px;margin-top:4px">{{car.label}}</div>
-                </div>
-            </ng-template>
-        </p-dropdown>
-    </div>
     <p-footer>
         <div class="ui-dialog-buttonpane ui-helper-clearfix">
+            <button type="button" (click)="showBasicDialog();mostrar()" pButton icon="pi pi-external-link" label="Clubes"></button>
+<p-dialog header="Clubes" [(visible)]="displayBasic" class="estilo"  [baseZIndex]="10000">
+
+  <div class="p-grid" style="width:250px;margin-bottom:10px" class="estilo" *ngFor="let club of clubs">
+    <div class="p-col-12" style="text-align: left;"><p-checkbox name="group1" [value]="club" [label]="club.nome" [(ngModel)]="selectedClubs" inputId="ny"></p-checkbox>
+    </div>
+</div>
+
+    <p-footer>
+        <button type="button" pButton icon="pi pi-check" (click)="excluirTimesDoCampeonato()" label="Excluir"></button>
+        <button type="button" pButton icon="pi pi-check" (click)="displayBasic=false" label="Fechar"></button>
+    </p-footer>
+</p-dialog>
             <button type="button" pButton icon="pi pi-times" (click)="delete(camp.id)" label="Delete"></button>
             <button type="button" pButton icon="pi pi-check" (click)="save()" label="Save"></button>
         </div>
     </p-footer>
 </p-dialog>
+
